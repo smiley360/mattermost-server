@@ -24,6 +24,9 @@ type Store interface {
 	// overrides
 	RemoveEnvironmentOverrides(cfg *model.Config) *model.Config
 
+	// PersistFeatures sets if the store should persist feature flags.
+	PersistFeatures(persist bool)
+
 	// Set replaces the current configuration in its entirety and updates the backing store.
 	Set(*model.Config) (*model.Config, error)
 

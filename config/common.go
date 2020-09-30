@@ -21,6 +21,8 @@ type commonStore struct {
 	config                 *model.Config
 	configWithoutOverrides *model.Config
 	environmentOverrides   map[string]interface{}
+
+	persistFeatureFlags bool
 }
 
 // Get fetches the current, cached configuration.
@@ -172,6 +174,15 @@ func (cs *commonStore) RemoveEnvironmentOverrides(cfg *model.Config) *model.Conf
 // RemoveNonPersistable removes any aspect of the configuration we do not want to persist
 func (cs *commonStore) RemoveNonPersistable(cfg *model.Config) *model.Config {
 	newCfg := cs.RemoveEnvironmentOverrides(cfg)
-	newCfg.FeatureFlags = nil
+	// Don't persist feature flags unless we are on MM cloud
+	// MM cloud uses config in the DB as a cache of the feature flag
+	// settings in case the managment system is down when a pod starts.
+	if cs.persistFeatureFlags {
+		newCfg.FeatureFlags = nil
+	}
 	return newCfg
+}
+
+func (cs *commonStore) PersistFeatures(persist bool) {
+	cs.persistFeatureFlags = persist
 }

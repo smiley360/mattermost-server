@@ -345,6 +345,9 @@ type ServiceSettings struct {
 	EnableLocalMode                                   *bool
 	LocalModeSocketLocation                           *string
 	EnableAWSMetering                                 *bool
+	SplitKey                                          *string `access:"environment,write_restrictable"`
+	FeatureFlagSyncIntervalSeconds                    *int    `access:"environment,write_restrictable"`
+	DebugSplit                                        *bool   `access:"environment,write_restrictable"`
 }
 
 func (s *ServiceSettings) SetDefaults(isUpdate bool) {
@@ -761,6 +764,18 @@ func (s *ServiceSettings) SetDefaults(isUpdate bool) {
 
 	if s.EnableAWSMetering == nil {
 		s.EnableAWSMetering = NewBool(false)
+	}
+
+	if s.SplitKey == nil {
+		s.SplitKey = NewString("")
+	}
+
+	if s.FeatureFlagSyncIntervalSeconds == nil {
+		s.FeatureFlagSyncIntervalSeconds = NewInt(30)
+	}
+
+	if s.DebugSplit == nil {
+		s.DebugSplit = NewBool(false)
 	}
 }
 
@@ -3602,4 +3617,6 @@ func (o *Config) Sanitize() {
 	if o.ServiceSettings.GfycatApiSecret != nil && len(*o.ServiceSettings.GfycatApiSecret) > 0 {
 		*o.ServiceSettings.GfycatApiSecret = FAKE_SETTING
 	}
+
+	*o.ServiceSettings.SplitKey = FAKE_SETTING
 }

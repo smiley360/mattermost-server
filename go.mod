@@ -31,6 +31,7 @@ require (
 	github.com/getsentry/sentry-go v0.7.0
 	github.com/glycerine/go-unsnap-stream v0.0.0-20190901134440-81cf024a9e0a // indirect
 	github.com/go-asn1-ber/asn1-ber v1.5.1 // indirect
+	github.com/go-redis/redis v6.15.9+incompatible // indirect
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
@@ -82,9 +83,9 @@ require (
 	github.com/pelletier/go-toml v1.8.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.7.1
-	github.com/reflog/dateconstraints v0.2.1
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.12.0 // indirect
+	github.com/reflog/dateconstraints v0.2.1
 	github.com/remyoudompheng/bigfft v0.0.0-20190728182440-6a916e37a237 // indirect
 	github.com/rs/cors v1.7.0
 	github.com/rudderlabs/analytics-go v3.2.1+incompatible
@@ -98,6 +99,9 @@ require (
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/splitio/go-client v0.0.0-20200910205908-a39c85913c80
+	github.com/splitio/go-split-commons v0.0.0-20200910202133-5907ee5fd903 // indirect
+	github.com/splitio/go-toolkit v0.0.0-20200908212815-d49116c52af2 // indirect
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/stretchr/testify v1.6.1

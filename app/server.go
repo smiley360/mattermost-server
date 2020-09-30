@@ -178,6 +178,10 @@ type Server struct {
 	// and data corruption.
 	uploadLockMapMut sync.Mutex
 	uploadLockMap    map[string]bool
+
+	featureFlagSynchronizer *featureFlagSynchronizer
+	featureFlagStop         chan struct{}
+	featureFlagStopped      chan struct{}
 }
 
 func NewServer(options ...Option) (*Server, error) {
@@ -365,7 +369,17 @@ func NewServer(options ...Option) (*Server, error) {
 		s.LoadLicense()
 	}
 
+	s.setupFeatureFlags()
+
 	s.initJobs()
+
+	s.clusterLeaderListenerId = s.AddClusterLeaderChangedListener(func() {
+		mlog.Info("Cluster leader changed. Determining if job schedulers should be running:", mlog.Bool("isLeader", s.IsLeader()))
+		if s.Jobs != nil && s.Jobs.Schedulers != nil {
+			s.Jobs.Schedulers.HandleClusterLeaderChange(s.IsLeader())
+		}
+		s.setupFeatureFlags()
+	})
 
 	if s.joinCluster && s.Cluster != nil {
 		s.Cluster.StartInterNodeCommunication()
@@ -388,13 +402,6 @@ func NewServer(options ...Option) (*Server, error) {
 	}
 
 	s.regenerateClientConfig()
-
-	s.clusterLeaderListenerId = s.AddClusterLeaderChangedListener(func() {
-		mlog.Info("Cluster leader changed. Determining if job schedulers should be running:", mlog.Bool("isLeader", s.IsLeader()))
-		if s.Jobs != nil && s.Jobs.Schedulers != nil {
-			s.Jobs.Schedulers.HandleClusterLeaderChange(s.IsLeader())
-		}
-	})
 
 	subpath, err := utils.GetSubpathFromConfig(s.Config())
 	if err != nil {
@@ -480,7 +487,6 @@ func NewServer(options ...Option) (*Server, error) {
 	s.checkPushNotificationServerUrl()
 
 	license := s.License()
-
 	if license == nil {
 		s.UpdateConfig(func(cfg *model.Config) {
 			cfg.TeamSettings.MaxNotificationsPerChannel = &MaxNotificationsPerChannelDefault
@@ -751,6 +757,8 @@ func (s *Server) Shutdown() error {
 	s.stopSearchEngine()
 
 	s.Audit.Shutdown()
+
+	s.stopFeatureFlagUpdateJob()
 
 	s.configStore.Close()
 
