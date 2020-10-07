@@ -189,6 +189,10 @@ func (es *EmailService) SendSignInChangeEmail(email, method, locale, siteURL str
 }
 
 func (es *EmailService) sendWelcomeEmail(userId string, email string, verified bool, locale, siteURL, redirect string) *model.AppError {
+
+	// Returning nil because we never want to send a welcome email from our system -Seth.
+	return nil
+
 	if !*es.srv.Config().EmailSettings.SendEmailNotifications && !*es.srv.Config().EmailSettings.RequireEmailVerification {
 		return model.NewAppError("SendWelcomeEmail", "api.user.send_welcome_email_and_forget.failed.error", nil, "Send Email Notifications and Require Email Verification is disabled in the system console", http.StatusInternalServerError)
 	}
