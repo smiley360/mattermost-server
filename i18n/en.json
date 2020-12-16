@@ -1236,7 +1236,7 @@
   },
   {
     "id": "api.email_batching.render_batched_post.go_to_post",
-    "translation": "Go to Post"
+    "translation": "Go to Community Chat"
   },
   {
     "id": "api.email_batching.render_batched_post.group_message",
@@ -2720,7 +2720,7 @@
   },
   {
     "id": "api.templates.post_body.button",
-    "translation": "Go To Post"
+    "translation": "Go to Community Chat"
   },
   {
     "id": "api.templates.remove_expired_license.body.renew_button",
